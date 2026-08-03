@@ -1,3 +1,7 @@
+# ===========================
+# Tinder Connect Premium Keyboards
+# ===========================
+
 from telegram import (
     KeyboardButton,
     ReplyKeyboardMarkup,
@@ -6,7 +10,12 @@ from telegram import (
 )
 
 
+# ===========================
+# PHONE REQUEST BUTTON
+# ===========================
+
 def phone_keyboard():
+
     return ReplyKeyboardMarkup(
         [
             [
@@ -18,29 +27,97 @@ def phone_keyboard():
         ],
         resize_keyboard=True,
         one_time_keyboard=True,
-        input_field_placeholder="Tap the button to continue..."
+        input_field_placeholder="Tap to continue..."
     )
 
 
+# ===========================
+# MAIN DASHBOARD
+# ===========================
+
 def main_menu():
+
+    buttons = [
+
+        [
+            InlineKeyboardButton(
+                "🚀 Get Started",
+                callback_data="start_registration"
+            )
+        ],
+
+
+        [
+            InlineKeyboardButton(
+                "❓ Help",
+                callback_data="help"
+            )
+        ],
+
+        [
+            InlineKeyboardButton(
+                "🌐 Website",
+                url="https://tinder.com/"
+            )
+        ]
+
+    ]
+
+    return InlineKeyboardMarkup(buttons)
+
+
+
+# ===========================
+# HELP MENU
+# ===========================
+
+def help_menu():
+
     return InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    "🌐 Website",
-                    url="https://yourwebsite.com"
+                    "💬 Contact Support",
+                    url="https://t.me/@dategram_support_bot"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    "🔒 Privacy Policy",
-                    url="https://yourwebsite.com/privacy"
+                    "⬅️ Back",
+                    callback_data="main_menu"
                 )
-            ],
+            ]
+        ]
+    )
+
+
+
+# ===========================
+# AFTER REGISTRATION MENU
+# ===========================
+
+def dashboard_menu():
+
+    return InlineKeyboardMarkup(
+        [
             [
                 InlineKeyboardButton(
-                    "❓ Support",
-                    url="https://t.me/YourSupport"
+                    "👤 My Profile",
+                    callback_data="profile"
+                )
+            ],
+
+            [
+                InlineKeyboardButton(
+                    "⚙️ Settings",
+                    callback_data="settings"
+                )
+            ],
+
+            [
+                InlineKeyboardButton(
+                    "💎 Premium",
+                    callback_data="premium"
                 )
             ]
         ]

