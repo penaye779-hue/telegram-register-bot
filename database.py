@@ -1,12 +1,22 @@
+import os
 import psycopg2
 from config import DATABASE_URL
 
 
-def connection():
-    return psycopg2.connect(
-        DATABASE_URL
-    )
+# Read directly from Railway environment variables
+DATABASE_URL = os.getenv("DATABASE_URL")
 
+
+def connection():
+  if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is missing!")
+
+  # Fix scheme if Railway provides 'postgres://' instead of 'postgresql://'
+  url = DATABASE_URL
+  if url.startswith("postgres://"):
+    url = url.replace("postgres://", "postgresql://", 1)
+
+  return psycopg2.connect(url)
 
 def create_tables():
 
